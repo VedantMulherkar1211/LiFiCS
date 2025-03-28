@@ -1,7 +1,23 @@
 #layoutSidenav {
-    display: flex;
-  }
+  display: flex;
+}
 
-#dashboardBtn{
-  color: #fff;
+#layoutSidenav_nav {
+  width: 250px;
+  height: 100vh; /* Full height */
+  background-color: #212529; /* Dark background */
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto; /* Enable scrolling */
+}
+
+.sb-sidenav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sb-sidenav-menu {
+  flex-grow: 1;
 }
