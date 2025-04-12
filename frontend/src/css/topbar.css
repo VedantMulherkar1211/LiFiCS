@@ -3,7 +3,7 @@
 }
 
 #layoutSidenav_nav {
-  width: 500px;
+  width: 250px;
   height: 100vh; /* Full height */
   background-color: #212529; /* Dark background */
   position: fixed;

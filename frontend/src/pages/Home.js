@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import TopNav from "../component/Topbar";
+import SideNav from "../component/Sidebar";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -10,10 +12,10 @@ const Home = () => {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "50px" }}>
-      <h1>Welcome to the Dashboard</h1>
-      <p>You have successfully logged in.</p>
-      <button onClick={handleLogout}>Logout</button>
+    <div>
+      <TopNav/>
+      <SideNav/>
+      
     </div>
   );
 };
