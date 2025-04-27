@@ -1,23 +1,48 @@
-#layoutSidenav {
+.topbar {
+  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  background-color: #18181b;
 }
 
-#layoutSidenav_nav {
-  width: 250px;
-  height: 100vh; /* Full height */
-  background-color: #212529; /* Dark background */
-  position: fixed;
-  left: 0;
-  top: 0;
-  overflow-y: auto; /* Enable scrolling */
-}
-
-.sb-sidenav {
+.topbar-content {
+  width: 100%;
+  max-width: 1440px;
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.sb-sidenav-menu {
-  flex-grow: 1;
+.topbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.lifics-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: #4f46e5; /* Indigo-600 */
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.btn-primary:hover {
+  background-color: #4338ca; /* Indigo-700 */
 }
