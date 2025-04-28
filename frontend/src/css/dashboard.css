@@ -1,0 +1,33 @@
+/* src/pages/Dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Adjust as needed */
+  }
+  
+  .dashboard-content {
+    display: flex;
+    flex: 1; /* Take remaining vertical space */
+  }
+  
+  .dashboard-content > div:first-child { /* Style for SideNav */
+    width: 200px; /* Example width */
+    /* Add other styles like height: 100%; */
+  }
+  
+  .main-dashboard-area {
+    flex: 1; /* Take remaining horizontal space */
+    overflow-y: auto; /* For scrolling if content is long */
+  }
+  
+  /* The rest of your dashboard specific styles from the previous example */
+  .salesDiv {
+    /* ... */
+  }
+  
+  .tab-content {
+    /* ... */
+  }
+  
+  /* ... and so on ... */
