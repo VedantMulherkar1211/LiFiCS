@@ -121,39 +121,20 @@ function Sidebar() {
           )}
 
           <li className="nav-item">
-            <BookOpen className="nav-icon" size={16} />
+            <BookOpen className="nav-icon" size={10} />
             <span className="nav-label">Documentation</span>
           </li>
 
           <div className="search-bar">
-        <Search className="search-icon" size={16} />
+        <Search className="search-icon" size={10} />
         <input type="text"/>
       </div>
         </ul>
-      </nav>
-
-      <div className="user-profile" onClick={toggleUserMenu}>
-        <div className="avatar">
-          <User className="user-icon" size={20} /> {/* Replace with an actual image */}
-        </div>
-        <div className="user-info">
-          <span className="user-name">Mia de Silva</span>
-          <span className="user-email">mia@untitledui.com</span>
-        </div>
-        <svg className={`arrow-down-icon ${isUserMenuOpen ? 'open' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-
-        {isUserMenuOpen && (
-          <div className="user-menu">
-            <div className="menu-item">View profile</div>
-            <div className="menu-item">Account settings</div>
-            <div className="menu-item">Analytics</div>
-            <div className="menu-item logout">Log out</div>
-          </div>
-        )}
-      </div>
+        </nav>
+      
+      
     </aside>
+    
   );
 }
 

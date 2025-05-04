@@ -266,19 +266,3 @@
 .sidebar.collapsed .nav-icon {
   margin-right: 0;
 }
-
-.sidebar.collapsed .user-profile {
-  flex-direction: column;
-  align-items: center;
-}
-
-.sidebar.collapsed .avatar {
-  margin-right: 0;
-  margin-bottom: 5px;
-}
-
-.sidebar.collapsed .user-menu {
-  left: auto;
-  right: -10px; /* Adjust for overflow */
-  bottom: 60px;
-}
