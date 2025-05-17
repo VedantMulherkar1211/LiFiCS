@@ -4,10 +4,16 @@ import { faShare, faBullseye, faDownload, faExpand } from '@fortawesome/free-sol
 import TopNav from '../component/Topbar';
 import SideNav from '../component/Sidebar';
 import '../css/dashboard.css';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 const Dashboard = () => {
   const [pieChartData, setPieChartData] = useState([]);
+  const [barChartData, setBarChartData] = useState([ // Example bar chart data
+    { name: 'Jan', value: 400 },
+    { name: 'Feb', value: 300 },
+    { name: 'Mar', value: 200 },
+    { name: 'Apr', value: 500 },
+  ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -103,13 +109,25 @@ const Dashboard = () => {
           </div>
 
           <div className="card-row">
-            {[1, 2, 3, 4].map((num) => (
+            {[1, 2].map((num) => (
               <div className="quarter-card card" key={num}>
                 <div className="card-header">
                   <h2 className="card-title">Card {num}</h2>
                 </div>
                 <div className="card-body">
-                  <p>Data for Card {num}.</p>
+                  {num === 1 && (
+                    <div style={{ width: '100%', height: '150px' }}> {/* Adjust height as needed */}
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={barChartData}>
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
+                          <Bar dataKey="value" fill="#8884d8" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
                   {num === 1 && (
                     <ul>
                       <li>Item 1: Value A</li>

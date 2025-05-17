@@ -1,7 +1,7 @@
 .sidebar {
   background-color: #18181b; /* Dark background */
   color: #e2e8f0; /* Light text */
-  width: 260px; /* Adjust as needed */
+  width: 260px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,9 +11,10 @@
 }
 
 .sidebar.collapsed {
-  width: 70px; /* Minimized width */
+  width: 70px;
 }
 
+/* Logo section */
 .logo-section {
   display: flex;
   align-items: center;
@@ -34,6 +35,7 @@
   width: 0;
 }
 
+/* Collapse toggle */
 .collapse-toggle {
   background: none;
   border: none;
@@ -47,6 +49,7 @@
   height: 20px;
 }
 
+/* Search bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -73,6 +76,7 @@
   color: #a0aec0;
 }
 
+/* Navigation list */
 .main-nav ul {
   list-style: none;
   padding: 0;
@@ -88,7 +92,7 @@
   margin-bottom: 5px;
   color: #a0aec0;
   transition: background-color 0.2s ease-in-out;
-  position: relative; /* For badge positioning */
+  position: relative;
 }
 
 .nav-item.active,
@@ -99,8 +103,13 @@
 
 .nav-icon {
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
 }
 
+/* Text beside icon */
 .nav-label {
   flex-grow: 1;
   white-space: nowrap;
@@ -108,6 +117,7 @@
   text-overflow: ellipsis;
 }
 
+/* Badge */
 .badge {
   background-color: #4a5568;
   color: #e2e8f0;
@@ -116,6 +126,7 @@
   font-size: 0.8rem;
 }
 
+/* Collapsible */
 .collapsible {
   justify-content: space-between;
 }
@@ -130,6 +141,7 @@
   transform: rotate(180deg);
 }
 
+/* Sub-menu */
 .sub-menu {
   list-style: none;
   padding-left: 20px;
@@ -149,6 +161,7 @@
   color: #fff;
 }
 
+/* User Profile */
 .user-profile {
   margin-top: auto;
   padding: 10px;
@@ -157,7 +170,7 @@
   border-radius: 8px;
   cursor: pointer;
   background-color: #2d3748;
-  position: relative; /* For user menu positioning */
+  position: relative;
 }
 
 .user-profile:hover {
@@ -168,7 +181,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #a0aec0; /* Placeholder */
+  background-color: #a0aec0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -176,12 +189,7 @@
   color: #1a202c;
   font-weight: bold;
   font-size: 0.9rem;
-  overflow: hidden; /* In case you use an actual image */
-}
-
-.user-icon {
-  width: 20px;
-  height: 20px;
+  overflow: hidden;
 }
 
 .user-info {
@@ -214,9 +222,10 @@
   transform: rotate(180deg);
 }
 
+/* User menu dropdown */
 .user-menu {
   position: absolute;
-  bottom: 60px; /* Adjust based on user profile height */
+  bottom: 60px;
   left: 0;
   background-color: #2d3748;
   border-radius: 8px;
@@ -247,7 +256,7 @@
   color: #fff;
 }
 
-/* Collapsed Sidebar Styles */
+/* Collapsed state adjustments */
 .sidebar.collapsed .nav-label,
 .sidebar.collapsed .badge,
 .sidebar.collapsed .arrow-icon,
@@ -260,9 +269,40 @@
 
 .sidebar.collapsed .nav-item {
   justify-content: center;
-  padding: 15px; /* Adjust for icon size */
+  padding: 15px;
 }
 
 .sidebar.collapsed .nav-icon {
   margin-right: 0;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-button {
+  all: unset;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: inherit;
+  text-align: left;
+}
+
+
+
+
+.nav-icon {
+  margin-right: 10px;
+}
+
+.badge {
+  margin-left: auto;
+  background-color: #007bff;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 12px;
 }
