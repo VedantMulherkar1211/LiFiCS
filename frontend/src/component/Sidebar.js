@@ -43,7 +43,7 @@ function Sidebar() {
     navigate('/lifestyle');
   };
   const handleLearningClick = () => {
-    navigate('/leaning');
+    navigate('/learning');
   };
 
   return (
@@ -125,10 +125,7 @@ function Sidebar() {
             </ul>
           )}
 
-          <li className="nav-item">
-            <Folder className="nav-icon" size={16} />
-            <span className="nav-label">Projects</span>
-          </li>
+          
 
           <li className="nav-item collapsible" onClick={toggleSettings}>
             <Settings className="nav-icon" size={16} />

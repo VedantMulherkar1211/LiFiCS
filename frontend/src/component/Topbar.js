@@ -32,7 +32,7 @@ const Topbar = () => {
           <a className="navbar-brand" href="#">
             <img
               src="" // <-- Add your logo source here
-              alt="LIFICS"
+            
               className="logo"
             />
           </a>
