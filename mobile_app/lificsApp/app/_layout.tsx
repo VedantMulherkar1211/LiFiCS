@@ -5,11 +5,10 @@ import { SafeAreaView, View } from 'react-native';
 
 export default function RootLayout() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Topbar />
-      <View style={{ flex: 1 }}>
-        <Stack />
-      </View>
-    </SafeAreaView>
+   <SafeAreaView>
+  <Topbar />
+  <Stack />
+</SafeAreaView>
+
   );
 }
