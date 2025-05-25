@@ -1,0 +1,82 @@
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative; /* Positioning context for absolute elements within */
+  width: 50%; /* Control the overall width of the input and suggestions */
+}
+
+.search-input-wrapper .form-control {
+  border-radius: 24px 24px 0 0; /* Round all corners initially */
+  border-bottom: none; /* Remove bottom border to connect with suggestions */
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  width: 100%; /* Ensure input fills the wrapper */
+  padding: 15px 20px;
+  font-size: 16px;
+}
+
+.search-input-wrapper .form-control:focus {
+  outline: none;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+  border-color: #4285f4;
+}
+
+.search-input-wrapper .loading-indicator {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 24px 24px; /* Curve the bottom corners */
+  font-size: 14px;
+  z-index: 5; /* Ensure it's above the suggestions if they appear simultaneously (edge case) */
+}
+
+.search-input-wrapper .suggestion-list {
+  position: absolute;
+  top: 100%; /* Align below the input */
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none; /* Connect visually with the input */
+  border-radius: 0 0 24px 24px; /* Curve the bottom corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  overflow-y: auto;
+  max-height: 300px;
+  margin-bottom: 0; /* Remove default list margin */
+  padding-left: 0; /* Remove default list padding */
+}
+
+.search-input-wrapper .suggestion-list .list-group-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-left: none;
+  border-right: none;
+}
+
+.search-input-wrapper .suggestion-list .list-group-item:first-child {
+  padding-top: 15px;
+}
+
+.search-input-wrapper .suggestion-list .list-group-item:last-child {
+  padding-bottom: 15px;
+  border-bottom: none; /* Remove bottom border of the last item */
+}
+
+.search-input-wrapper .suggestion-list .list-group-item:hover {
+  background-color: #f8f9fa;
+}

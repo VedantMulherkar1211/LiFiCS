@@ -1,0 +1,87 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard-wrapper {
+  display: flex;
+  flex: 1;
+}
+
+.dashboard-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  height: calc(100vh - var(--top-nav-height));
+  box-sizing: border-box;
+}
+
+.card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.full-width-card {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.quarter-card {
+  width: calc(25% - 15px);
+  min-width: 200px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.card-body {
+  /* Add styling for card body if needed */
+}
+
+/* Styles for TopNav and SideNav */
+.top-nav {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  height: var(--top-nav-height);
+}
+
+.side-nav {
+  background-color: #222;
+  color: white;
+  width: 250px;
+  padding: 20px;
+  height: 100%;
+}
+
+:root {
+  --top-nav-height: 40px; /* Changed from 60px to 40px */
+}

@@ -1,0 +1,35 @@
+/* src/pages/Home.css */
+
+.home-container {
+    display: flex;
+    flex-direction: column; /* Stack TopNav, content-area */
+    height: 100vh; /* Or adjust as needed */
+  }
+  
+  .content-area {
+    display: flex;
+    flex: 1; /* Allow content-area to take remaining vertical space */
+  }
+  
+  .content-area > div:first-child { /* Style for SideNav (assuming it's the first child) */
+    /* Adjust width as needed */
+    width: 200px; /* Example width */
+  }
+  
+  .content-area > div:last-child { /* Style for Dashboard (assuming it's the last child) */
+    flex: 1; /* Allow Dashboard to take remaining horizontal space */
+    overflow-y: auto; /* If Dashboard content overflows vertically */
+  }
+  
+  /* You might need to adjust styles for TopNav and SideNav components themselves
+     depending on how they are implemented. For example: */
+  /*
+  .top-nav {
+    // Styles for TopNav
+  }
+  
+  .side-nav {
+    // Styles for SideNav
+    height: 100%; // Make SideNav take full height of content-area
+  }
+  */
