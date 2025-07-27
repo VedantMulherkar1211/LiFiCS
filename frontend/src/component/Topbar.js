@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "../css/topbar.css";
 import { Navbar } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 import { 
   //Search,
   Layout, // Replacing LayoutDashboard with Layout
@@ -11,10 +12,12 @@ import {
   Settings,
   BookOpen,
   Mail,
-  User
+  User,
+  LogIn
 } from 'react-feather';
 
 const Topbar = () => {
+  const navigate = useNavigate();
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -24,6 +27,11 @@ const Topbar = () => {
   const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
   const toggleSidebarCollapse = () => setIsSidebarCollapsed(!isSidebarCollapsed);
+
+   const handleLogout=() =>{
+           //localStorage.removeItem('token');
+           navigate('/Login'); 
+          }
 
   return (
     <Navbar className="topbar glass-navbar"  expand="lg">
@@ -54,12 +62,14 @@ const Topbar = () => {
           <polyline points="6 9 12 15 18 9" />
         </svg>
 
+         
+
         {isUserMenuOpen && (
           <div className="user-menu">
             <div className="menu-item">View profile</div>
             <div className="menu-item">Account settings</div>
             <div className="menu-item">Analytics</div>
-            <div className="menu-item logout">Log out</div>
+            <div className="menu-item logout" onClick={handleLogout}>Log out</div>
           </div>
         )}
       </div>

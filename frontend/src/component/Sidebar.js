@@ -137,17 +137,17 @@ function Sidebar() {
 
           {isSettingsOpen && (
             <ul className="sub-menu">
-              <li className="nav-item sub-item"><span className="nav-label">General</span></li>
-              <li className="nav-item sub-item"><span className="nav-label">Domains</span></li>
-              <li className="nav-item sub-item"><span className="nav-label">Integrations</span></li>
-              <li className="nav-item sub-item"><span className="nav-label">Billing</span></li>
-              <li className="nav-item sub-item"><span className="nav-label">Payouts</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">Theme</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">User</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">User Config</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">System Config</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">Dashboard Config</span></li>
             </ul>
           )}
 
           <div className="search-bar">
             <Search className="search-icon" size={8} />
-            <input type="text" placeholder="Search..." />
+            
           </div>
         </ul>
       </nav>
