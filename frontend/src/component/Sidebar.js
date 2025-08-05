@@ -145,10 +145,10 @@ function Sidebar() {
             </ul>
           )}
 
-          <div className="search-bar">
+          {/* <div className="search-bar">
             <Search className="search-icon" size={8} />
             
-          </div>
+          </div> */}
         </ul>
       </nav>
     </aside>
