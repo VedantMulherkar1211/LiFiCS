@@ -18,7 +18,17 @@ return (
         <div className="content-area">
           <div className="container-fluid">
             <div className="main">
-
+              {/* Row 2: Radial Chart & Progress Bars */}
+              <div className="row">
+                <div className="col-md-5 mb-4">
+                  <div className="box columnbox">
+                    <RadialChart />
+                  </div>
+                  <div className="col-md-7 mb-4">
+                    <RadialChart />
+                  </div>
+                </div>
+                  </div>
               {/* Row 1: Column Chart & Line Chart */}
               <div className="row mt-4">
                 <div className="col-md-5 mb-4">
@@ -33,27 +43,8 @@ return (
                 </div>
               </div>
 
-              {/* Row 2: Radial Chart & Progress Bars */}
-              <div className="row">
-                <div className="col-md-5 mb-4">
-                  <div className="box radialbox">
-                    <RadialChart />
-                  </div>
-                </div>
-                <div className="col-md-7 mb-4">
-                  <div className="box p-3">
-                    <div className="mb-3">
-                      <ProgressBar label="Progress 1" value={70} />
-                    </div>
-                    <div className="mb-3">
-                      <ProgressBar label="Progress 2" value={50} />
-                    </div>
-                    <div>
-                      <ProgressBar label="Progress 3" value={90} />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              
+                
 
               {/* Row 3: Future placeholder */}
               <div className="row">

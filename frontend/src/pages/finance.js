@@ -1,27 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare, faBullseye, faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
-import TopNav from '../component/Topbar';
-import SideNav from '../component/Sidebar';
-import '../css/dashboard.css';
-
+import React, { useState, useEffect, useRef } from "react";
+import flatpickr from "flatpickr";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShare, faBullseye, faDownload, faExpand } from "@fortawesome/free-solid-svg-icons";
+import TopNav from "../component/Topbar";
+import SideNav from "../component/Sidebar";
+import "flatpickr/dist/flatpickr.min.css";
+import "../css/dashboard.css";
 
 const Finance = () => {
-
   const [formData, setFormData] = useState({
-      age: "",
-      gender: "",
-      height: "",
-      weight: "",
-      bmi: "",
-      bloodpressure: "",
-      bloodglucose: "",
-      heartrate: "",
-      hairDensity: "",
-      hairLossRate: "",
-      scalpCondition: "",
-    });
-const handleChange = (e) => {
+    age: "",
+    gender: "",
+    height: "",
+    weight: "",
+    bmi: "",
+    bloodpressure: "",
+    bloodglucose: "",
+    heartrate: "",
+    hairDensity: "",
+    hairLossRate: "",
+    scalpCondition: "",
+  });
+
+  const datePickerRef = useRef(null);
+
+  useEffect(() => {
+    if (datePickerRef.current) {
+      flatpickr(datePickerRef.current, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        disable: [
+          function (date) {
+            return date.getDay() === 0 || date.getDay() === 6; // Disable weekends
+          },
+        ],
+        allowInput: true,
+      });
+    }
+  }, []);
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -30,6 +49,7 @@ const handleChange = (e) => {
     e.preventDefault();
     console.log("Submitted:", formData);
   };
+
   const handleReset = () => {
     setFormData({
       age: "",
@@ -45,16 +65,15 @@ const handleChange = (e) => {
       scalpCondition: "",
     });
   };
+
   return (
     <div className="dashboard-container">
       <TopNav />
       <div className="dashboard-wrapper">
         <SideNav />
         <main className="dashboard-content">
-          {/* Data Table Card */}
           <div className="card mb-4">
             <div className="card-header">
-              {/* Row above title containing the Open Health Form button */}
               <div className="row mb-2">
                 <div className="col">
                   <button
@@ -63,65 +82,30 @@ const handleChange = (e) => {
                     data-bs-toggle="modal"
                     data-bs-target="#healthFormModal"
                   >
-                    Open Health Form
+                    Expenses
                   </button>
                 </div>
               </div>
-              <h2 className="card-title">Health Data</h2>
+              <h2 className="card-title">Finance Data</h2>
             </div>
             <div className="card-body">
-              <table className="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Height (cm)</th>
-                    <th>Weight (kg)</th>
-                    <th>BMI</th>
-                    <th>Blood Pressure</th>
-                    <th>Blood Glucose (mg/dL)</th>
-                    <th>Heart Rate (bpm)</th>
-                    <th>Hair Density (per cm²)</th>
-                    <th>Hair Loss Rate (strands/day)</th>
-                    <th>Scalp Condition</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Example row - add more rows or map over your data */}
-                  <tr>
-                    <td>1</td>
-                    <td>30</td>
-                    <td>Male</td>
-                    <td>175</td>
-                    <td>70</td>
-                    <td>22.9</td>
-                    <td>120/80</td>
-                    <td>95</td>
-                    <td>72</td>
-                    <td>60</td>
-                    <td>50</td>
-                    <td>Good</td>
-                  </tr>
-                </tbody>
-              </table>
+              {/* Table goes here */}
+              {/* ... */}
             </div>
           </div>
 
-          {/* Modal with the Health Form */}
+          {/* Modal */}
           <div
             className="modal fade"
             id="healthFormModal"
             tabIndex="-1"
-            aria-labelledby="healthFormModalLabel"
+            aria-labelledby="exampleModalLabel"
             aria-hidden="true"
           >
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-xl modal-dialog-centered">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="healthFormModalLabel">
-                    Health Details Form
-                  </h5>
+                  <h5 className="modal-title">Daily Expenses</h5>
                   <button
                     type="button"
                     className="btn-close"
@@ -130,136 +114,35 @@ const handleChange = (e) => {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="health-form" onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                      <label>Age</label>
-                      <input
-                        type="number"
-                        name="age"
-                        className="form-control"
-                        value={formData.age}
-                        onChange={handleChange}
-                      />
-                    </div>
+                  <form onSubmit={handleSubmit}>
 
-                    <div className="mb-3">
-                      <label>Gender</label>
-                      <input
-                        name="gender"
-                        className="form-control"
-                        value={formData.gender}
-                        onChange={handleChange}
-                      />
-                    </div>
+                    {/* Pacing */}
+                    <fieldset className="border rounded p-3 mb-3">
+                      <legend className="w-auto text-primary">Add Expense</legend>
+                      <div className="row mb-3">
+                        <div className="col-4">
+                          <label className="form-label">
+                            Select Date:
+                          </label>
+                          <div className="input-group">
+                            <input
+                              ref={datePickerRef}
+                              placeholder="YYYY-MM-DD"
+                              className="form-control"
+                              id="addPacingDateTimePicker"
+                            />
+                            <span className="input-group-text">
+                              <i className="fa fa-calendar"></i>
+                            </span>
+                          </div>
+                        </div>
+                        
+                       
+                      </div>
+                    </fieldset>
 
-                    <div className="mb-3">
-                      <label>Height (cm)</label>
-                      <input
-                        type="number"
-                        name="height"
-                        className="form-control"
-                        value={formData.height}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Weight (kg)</label>
-                      <input
-                        type="number"
-                        name="weight"
-                        className="form-control"
-                        value={formData.weight}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>BMI</label>
-                      <input
-                        type="number"
-                        name="bmi"
-                        className="form-control"
-                        value={formData.bmi}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Blood Pressure</label>
-                      <input
-                        type="text"
-                        name="bloodpressure"
-                        className="form-control"
-                        value={formData.bloodpressure}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Blood Glucose (mg/dL)</label>
-                      <input
-                        type="number"
-                        name="bloodglucose"
-                        className="form-control"
-                        value={formData.bloodglucose}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Heart Rate (bpm)</label>
-                      <input
-                        type="number"
-                        name="heartrate"
-                        className="form-control"
-                        value={formData.heartrate}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Hair Density (per cm²)</label>
-                      <input
-                        type="number"
-                        name="hairDensity"
-                        className="form-control"
-                        value={formData.hairDensity}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Hair Loss Rate (strands/day)</label>
-                      <input
-                        type="number"
-                        name="hairLossRate"
-                        className="form-control"
-                        value={formData.hairLossRate}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Scalp Condition</label>
-                      <input
-                        type="text"
-                        name="scalpCondition"
-                        className="form-control"
-                        value={formData.scalpCondition}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="d-flex justify-content-between">
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        onClick={handleReset}
-                      >
-                        Reset
-                      </button>
-                      <button type="submit" className="btn btn-success">
+                    <div className="d-flex justify-content-end mb-3">
+                      <button type="submit" className="btn btn-primary m-1">
                         Submit
                       </button>
                     </div>
@@ -273,6 +156,5 @@ const handleChange = (e) => {
     </div>
   );
 };
+
 export default Finance;
-
-
