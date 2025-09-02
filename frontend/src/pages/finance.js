@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext} from "react";
+import { ThemeContext } from "../component/ThemeContext";
 import flatpickr from "flatpickr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShare, faBullseye, faDownload, faExpand } from "@fortawesome/free-solid-svg-icons";
@@ -8,6 +9,18 @@ import "flatpickr/dist/flatpickr.min.css";
 import "../css/dashboard.css";
 
 const Finance = () => {
+   const { isDark } = useContext(ThemeContext);
+    
+      // Choose colors based on theme
+      const contentStyle = {
+        background: isDark 
+          ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
+          : "#ffffff",
+        color: isDark ? "#ffffff" : "#000000",
+        minHeight: "100vh",
+        padding: "20px",
+        transition: "all 0.5s ease", // smooth transition
+      };
   const [formData, setFormData] = useState({
     age: "",
     gender: "",
@@ -71,7 +84,7 @@ const Finance = () => {
       <TopNav />
       <div className="dashboard-wrapper">
         <SideNav />
-        <main className="dashboard-content">
+        <main className="dashboard-content"style={contentStyle}>
           <div className="card mb-4">
             <div className="card-header">
               <div className="row mb-2">

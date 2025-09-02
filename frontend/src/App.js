@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "./component/ThemeContext";
 //components
 
 //pages
@@ -14,6 +15,7 @@ import FitDashboard from "../src/component/fitdata";
 
 const App = () => {
   return (
+    <ThemeProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Dashboard />} />
@@ -26,6 +28,7 @@ const App = () => {
         <Route path="/lifestyle" element={<Lifestyle />} />
       </Routes>
     </Router>
+    </ThemeProvider>
   );
 };
 

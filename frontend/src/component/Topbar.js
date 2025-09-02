@@ -1,80 +1,62 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import "../css/topbar.css";
 import { Navbar } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-import { 
-  //Search,
-  Layout, // Replacing LayoutDashboard with Layout
-  Activity,
-  List, // Replacing ListTask with List
-  BarChart,
-  Folder,
-  Settings,
-  BookOpen,
-  Mail,
-  User,
-  LogIn
-} from 'react-feather';
+import { User } from 'react-feather';
+import { ThemeContext } from "../component/ThemeContext";
 
 const Topbar = () => {
   const navigate = useNavigate();
-  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const { toggleTheme, isDark } = useContext(ThemeContext); // get isDark
 
-    const toggleAnalytics = () => setIsAnalyticsOpen(!isAnalyticsOpen);
-  const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
+  const topbarStyle = {
+    borderBottom: isDark ? "2px solid #FFFF00" : "none", // neon yellow border for dark mode
+    transition: "all 0.5s ease",
+  };
+
   const toggleUserMenu = () => setIsUserMenuOpen(!isUserMenuOpen);
-  const toggleSidebarCollapse = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
-   const handleLogout=() =>{
-           //localStorage.removeItem('token');
-           navigate('/Login'); 
-          }
+  const handleLogout = () => navigate('/Login');
 
   return (
-    <Navbar className="topbar glass-navbar"  expand="lg">
-       <div className="topbar-content container-fluid">
-          <div className="topbar-left">
-          <a className="navbar-brand" href="#">
-            <img
-              src="" // <-- Add your logo source here
-            
-              className="logo"
-            />
-          </a>
+    <Navbar className="topbar glass-navbar" expand="lg" style={topbarStyle}>
+      <div className="topbar-content container-fluid">
+        <div className="topbar-left">
           <span className="lifics-title">LIFICS</span>
         </div>
-
-        
       </div>
 
       <div className="user-profile" onClick={toggleUserMenu}>
         <div className="avatar">
-          <User className="user-icon" size={20} /> {/* Replace with an actual image */}
+          <User className="user-icon" size={20} />
         </div>
         <div className="user-info">
           <span className="user-name">Vedant Mulherkar</span>
           <span className="user-email">mulherkarvedant@gmail.com</span>
         </div>
-        <svg className={`arrow-down-icon ${isUserMenuOpen ? 'open' : ''}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg className={`arrow-down-icon ${isUserMenuOpen ? 'open' : ''}`} viewBox="0 0 24 24">
           <polyline points="6 9 12 15 18 9" />
         </svg>
-
-         
 
         {isUserMenuOpen && (
           <div className="user-menu">
             <div className="menu-item">View profile</div>
             <div className="menu-item">Account settings</div>
-            <div className="menu-item">Analytics</div>
+            <div className="menu-item">
+              <button 
+                id="theme-toggle" 
+                className="btn btn-secondary"
+                onClick={(e) => { e.stopPropagation(); toggleTheme(); }}
+              >
+                Switch to {isDark ? "Light" : "Dark"} Mode
+              </button>
+            </div>
             <div className="menu-item logout" onClick={handleLogout}>Log out</div>
           </div>
         )}
       </div>
     </Navbar>
-    
   );
 };
 

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { ThemeContext } from "../component/ThemeContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -6,6 +7,20 @@ import TopNav from "../component/Topbar";
 import SideNav from "../component/Sidebar";
 
 const Health = () => {
+
+  const { isDark } = useContext(ThemeContext);
+      
+        // Choose colors based on theme
+        const contentStyle = {
+          background: isDark 
+            ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
+            : "#ffffff",
+          color: isDark ? "#ffffff" : "#000000",
+          minHeight: "100vh",
+          padding: "20px",
+          transition: "all 0.5s ease", // smooth transition
+        };
+
   const [formData, setFormData] = useState({
     age: "",
     gender: "",
@@ -51,7 +66,7 @@ const Health = () => {
       <TopNav />
       <div className="dashboard-wrapper">
         <SideNav />
-        <main className="dashboard-content">
+        <main className="dashboard-content" style={contentStyle}>
           {/* Data Table Card */}
           <div className="card mb-4">
             <div className="card-header">

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
 import '../css/sidebar.css'; // Custom CSS
 import Search from "../component/search";
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +19,7 @@ import {
 } from 'react-feather';
 
 function Sidebar() {
+  const { isDark } = useContext(ThemeContext);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -26,6 +28,11 @@ function Sidebar() {
   const toggleAnalytics = () => setIsAnalyticsOpen(!isAnalyticsOpen);
   const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
   const toggleSidebarCollapse = () => setIsSidebarCollapsed(!isSidebarCollapsed);
+
+  const sidebarStyle = {
+    borderRight: isDark ? "2px solid #FFFF00" : "none", // neon yellow border in dark mode
+    transition: "all 0.5s ease",
+  };
 
   const handleDashboardClick = () => {
     navigate('/');
@@ -47,7 +54,7 @@ function Sidebar() {
   };
 
   return (
-    <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${isSidebarCollapsed ? 'collapsed' : ''}`}style={sidebarStyle}>
       <div className="logo-section">
         <div className="logo">LIFICS</div>
         <button className="collapse-toggle" onClick={toggleSidebarCollapse}>
