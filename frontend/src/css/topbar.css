@@ -86,7 +86,7 @@
 .user-name {
   font-weight: bold;
   font-size: 0.9rem;
-  color: #fff;
+  color: #ffd000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -94,7 +94,7 @@
 
 .user-email {
   font-size: 0.75rem;
-  color: #a0aec0;
+  color: #ffd000;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -117,6 +117,7 @@
   top: 110%; /* slightly lower */
   right: 0;
   border-radius: 8px;
+  border-color: #ffd000;
   padding: 10px 0;
   z-index: 100;
   background-color: #fff;
@@ -126,8 +127,9 @@
 
 .user-menu .menu-item {
   padding: 10px 16px;
+  color: #ffd000;
   font-size: 0.9rem;
- 
+  background-color: #fff;
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
 }
