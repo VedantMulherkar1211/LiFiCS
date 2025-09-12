@@ -1,27 +1,32 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { ThemeContext } from "../component/ThemeContext";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 import TopNav from "../component/Topbar";
 import SideNav from "../component/Sidebar";
+import "../css/dashboard.css";
 
 const Health = () => {
-
   const { isDark } = useContext(ThemeContext);
-      
-        // Choose colors based on theme
-        const contentStyle = {
-          background: isDark 
-            ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
-            : "#ffffff",
-          color: isDark ? "#ffffff" : "#000000",
-          minHeight: "100vh",
-          padding: "20px",
-          transition: "all 0.5s ease", // smooth transition
-        };
 
-  const [formData, setFormData] = useState({
+  const contentStyle = {
+    background: isDark
+      ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
+      : "#ffffff",
+    color: isDark ? "#ffffff" : "#000000",
+    minHeight: "100vh",
+    padding: "20px",
+    transition: "all 0.5s ease",
+  };
+
+  const tableStyle = {
+    backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "#ffffff",
+    color: isDark ? "#ffffff" : "#000000",
+    border: isDark ? "2px solid #FFFF00" : "1px solid #dee2e6",
+    transition: "all 0.5s ease",
+  };
+
+  const initialFormData = {
     age: "",
     gender: "",
     height: "",
@@ -33,7 +38,30 @@ const Health = () => {
     hairDensity: "",
     hairLossRate: "",
     scalpCondition: "",
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [allHealthData, setAllHealthData] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+  const datePickerRef = useRef(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("healthData");
+    if (saved) setAllHealthData(JSON.parse(saved));
+  }, []);
+
+  useEffect(() => {
+    if (datePickerRef.current) {
+      flatpickr(datePickerRef.current, {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        onChange: (selectedDates, dateStr) => {
+          setSelectedDate(dateStr);
+        },
+      });
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,23 +70,25 @@ const Health = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitted:", formData);
+
+    if (!selectedDate) return;
+
+    const newEntry = {
+      id: allHealthData.length + 1,
+      date: selectedDate,
+      ...formData,
+    };
+
+    const updated = [...allHealthData, newEntry];
+    setAllHealthData(updated);
+    localStorage.setItem("healthData", JSON.stringify(updated));
+
+    setFormData(initialFormData);
+    document.getElementById("healthFormModalClose").click();
   };
 
   const handleReset = () => {
-    setFormData({
-      age: "",
-      gender: "",
-      height: "",
-      weight: "",
-      bmi: "",
-      bloodpressure: "",
-      bloodglucose: "",
-      heartrate: "",
-      hairDensity: "",
-      hairLossRate: "",
-      scalpCondition: "",
-    });
+    setFormData(initialFormData);
   };
 
   return (
@@ -67,216 +97,130 @@ const Health = () => {
       <div className="dashboard-wrapper">
         <SideNav />
         <main className="dashboard-content" style={contentStyle}>
-          {/* Data Table Card */}
           <div className="card mb-4">
             <div className="card-header">
-              {/* Row above title containing the Open Health Form button */}
-              <div className="row mb-2">
-                <div className="col">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-bs-toggle="modal"
-                    data-bs-target="#healthFormModal"
-                  >
-                    Open Health Form
-                  </button>
-                </div>
-              </div>
-              <h2 className="card-title">Health Data</h2>
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#healthFormModal"
+              >
+                Open Health Form
+              </button>
+              <h2 className="card-title mt-2">Health Data</h2>
             </div>
-            <div className="card-body">
-              <table className="table table-bordered table-striped">
+            <div className="card-body table-responsive bg-dark" style={tableStyle}>
+              <table className="table table-bordered table-striped text-center finance-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Height (cm)</th>
-                    <th>Weight (kg)</th>
-                    <th>BMI</th>
-                    <th>Blood Pressure</th>
-                    <th>Blood Glucose (mg/dL)</th>
-                    <th>Heart Rate (bpm)</th>
-                    <th>Hair Density (per cm²)</th>
-                    <th>Hair Loss Rate (strands/day)</th>
-                    <th>Scalp Condition</th>
+                    <th className="bg-warning">ID</th>
+                    <th className="bg-warning">Date</th>
+                    <th className="bg-warning">Age</th>
+                    <th className="bg-warning">Gender</th>
+                    <th className="bg-warning">Height (cm)</th>
+                    <th className="bg-warning">Weight (kg)</th>
+                    <th className="bg-warning">BMI</th>
+                    <th className="bg-warning">Blood Pressure</th>
+                    <th className="bg-warning">Blood Glucose</th>
+                    <th className="bg-warning">Heart Rate</th>
+                    <th className="bg-warning">Hair Density</th>
+                    <th className="bg-warning">Hair Loss Rate</th>
+                    <th className="bg-warning">Scalp Condition</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Example row - add more rows or map over your data */}
-                  <tr>
-                    <td>1</td>
-                    <td>30</td>
-                    <td>Male</td>
-                    <td>175</td>
-                    <td>70</td>
-                    <td>22.9</td>
-                    <td>120/80</td>
-                    <td>95</td>
-                    <td>72</td>
-                    <td>60</td>
-                    <td>50</td>
-                    <td>Good</td>
-                  </tr>
+                  {allHealthData.length > 0 ? (
+                    allHealthData.map((entry) => (
+                      <tr key={entry.id}>
+                        <td>{entry.id}</td>
+                        <td>{entry.date}</td>
+                        <td>{entry.age}</td>
+                        <td>{entry.gender}</td>
+                        <td>{entry.height}</td>
+                        <td>{entry.weight}</td>
+                        <td>{entry.bmi}</td>
+                        <td>{entry.bloodpressure}</td>
+                        <td>{entry.bloodglucose}</td>
+                        <td>{entry.heartrate}</td>
+                        <td>{entry.hairDensity}</td>
+                        <td>{entry.hairLossRate}</td>
+                        <td>{entry.scalpCondition}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="13">No data available</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Modal with the Health Form */}
+          {/* Modal Form */}
           <div
             className="modal fade"
             id="healthFormModal"
             tabIndex="-1"
-            aria-labelledby="healthFormModalLabel"
             aria-hidden="true"
           >
-            <div className="modal-dialog">
+            <div className="modal-dialog modal-xl modal-dialog-centered">
               <div className="modal-content">
                 <div className="modal-header">
-                  <h5 className="modal-title" id="healthFormModalLabel">
-                    Health Details Form
-                  </h5>
+                  <h5 className="modal-title">Health Details Form</h5>
                   <button
+                    id="healthFormModalClose"
                     type="button"
                     className="btn-close"
                     data-bs-dismiss="modal"
-                    aria-label="Close"
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form className="health-form" onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                      <label>Age</label>
+                  <form onSubmit={handleSubmit}>
+                    <fieldset className="border rounded p-3 mb-3">
+                      <legend className="w-auto text-primary">Select Date</legend>
                       <input
-                        type="number"
-                        name="age"
-                        className="form-control"
-                        value={formData.age}
-                        onChange={handleChange}
+                        ref={datePickerRef}
+                        placeholder="YYYY-MM-DD"
+                        className="form-control w-25"
                       />
-                    </div>
+                    </fieldset>
 
-                    <div className="mb-3">
-                      <label>Gender</label>
-                      <input
-                        name="gender"
-                        className="form-control"
-                        value={formData.gender}
-                        onChange={handleChange}
-                      />
-                    </div>
+                    <fieldset className="border rounded p-3 mb-3">
+                      <legend className="w-auto text-success">Enter Health Data</legend>
+                      <div className="row">
+                        {Object.keys(initialFormData).map((key, idx) => (
+                          <div key={idx} className="col-md-4 mb-3">
+                            <label className="form-label">{key}</label>
+                            <input
+                              type="text"
+                              name={key}
+                              className="form-control"
+                              value={formData[key]}
+                              onChange={handleChange}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </fieldset>
 
-                    <div className="mb-3">
-                      <label>Height (cm)</label>
-                      <input
-                        type="number"
-                        name="height"
-                        className="form-control"
-                        value={formData.height}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Weight (kg)</label>
-                      <input
-                        type="number"
-                        name="weight"
-                        className="form-control"
-                        value={formData.weight}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>BMI</label>
-                      <input
-                        type="number"
-                        name="bmi"
-                        className="form-control"
-                        value={formData.bmi}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Blood Pressure</label>
-                      <input
-                        type="text"
-                        name="bloodpressure"
-                        className="form-control"
-                        value={formData.bloodpressure}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Blood Glucose (mg/dL)</label>
-                      <input
-                        type="number"
-                        name="bloodglucose"
-                        className="form-control"
-                        value={formData.bloodglucose}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Heart Rate (bpm)</label>
-                      <input
-                        type="number"
-                        name="heartrate"
-                        className="form-control"
-                        value={formData.heartrate}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Hair Density (per cm²)</label>
-                      <input
-                        type="number"
-                        name="hairDensity"
-                        className="form-control"
-                        value={formData.hairDensity}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Hair Loss Rate (strands/day)</label>
-                      <input
-                        type="number"
-                        name="hairLossRate"
-                        className="form-control"
-                        value={formData.hairLossRate}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label>Scalp Condition</label>
-                      <input
-                        type="text"
-                        name="scalpCondition"
-                        className="form-control"
-                        value={formData.scalpCondition}
-                        onChange={handleChange}
-                      />
-                    </div>
-
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-end">
+                      <button type="submit" className="btn btn-primary m-1">
+                        Save
+                      </button>
                       <button
                         type="button"
-                        className="btn btn-secondary"
+                        className="btn btn-secondary m-1"
                         onClick={handleReset}
                       >
                         Reset
                       </button>
-                      <button type="submit" className="btn btn-success">
-                        Submit
+                      <button
+                        type="button"
+                        className="btn btn-secondary m-1"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
                       </button>
                     </div>
                   </form>

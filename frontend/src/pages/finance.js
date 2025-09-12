@@ -24,6 +24,7 @@ const Finance = () => {
     color: isDark ? "#ffffff" : "#000000",
     border: isDark ? "2px solid #FFFF00" : "1px solid #dee2e6",
     transition: "all 0.5s ease",
+    
   };
 
   const months = [
@@ -143,15 +144,15 @@ const Finance = () => {
             </div>
 
             {/* Expenses Table */}
-            <div className="card-body table-responsive" style={tableStyle}>
+            <div className="card-body table-responsive bg-dark" style={tableStyle}>
               <table className="table table-bordered table-striped text-center">
                 <thead>
                   <tr>
-                    <th>Month</th>
+                    <th className="bg-warning">Month</th>
                     {months.map((m) => (
-                      <th key={m}>{m}</th>
+                      <th className="bg-warning" key={m}>{m}</th>
                     ))}
-                    <th>Total</th>
+                    <th className="bg-warning">Total</th>
                   </tr>
                 </thead>
                 <tbody>
