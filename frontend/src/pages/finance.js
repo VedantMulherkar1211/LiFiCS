@@ -57,6 +57,7 @@ const Finance = () => {
         enableTime: false,
         dateFormat: "Y-m-d",
         allowInput: true,
+        maxDate: "today",
         onChange: (selectedDates, dateStr) => {
           setSelectedDate(dateStr);
           setShowExpenseForm(true);
