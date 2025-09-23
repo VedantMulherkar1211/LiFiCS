@@ -12,6 +12,7 @@ import Carear from "../src/pages/Carear";
 import Lifestyle from "../src/pages/Lifestyle";
 import Learning from "../src/pages/Learning";
 import FitDashboard from "../src/component/fitdata"; 
+import Register from "./component/RadialChart";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/Register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/fit" element={<FitDashboard />} />
         <Route path="/finance" element={<Finance />} />
