@@ -1,205 +1,262 @@
-/**
- * @file finance.js
- * @description Finance Tracker Component (React)
- * @author Vedant
- * @version 2.0.0
- */
-
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { ThemeContext } from "../component/ThemeContext";
 import flatpickr from "flatpickr";
 import TopNav from "../component/Topbar";
 import SideNav from "../component/Sidebar";
+import DataTable, { createTheme } from "react-data-table-component";
 import "flatpickr/dist/flatpickr.min.css";
 import "../css/dashboard.css";
 
+createTheme("darkTable", {
+  text: {
+    primary: "#ffffff",
+    secondary: "#cbd5e1",
+  },
+  background: {
+    default: "#0f172a",
+  },
+  context: {
+    background: "#1e293b",
+    text: "#ffffff",
+  },
+  divider: {
+    default: "#334155",
+  },
+  action: {
+    button: "rgba(255, 255, 255, 0.54)",
+    hover: "rgba(255, 255, 255, 0.08)",
+    disabled: "rgba(255, 255, 255, 0.12)",
+  },
+});
 const Finance = () => {
   const { isDark } = useContext(ThemeContext);
 
-  // 🔹 State management
-  const [selectedDate, setSelectedDate] = useState("");
-  const [expenseData, setExpenseData] = useState({});
-  const [expenseCategories, setExpenseCategories] = useState([]);
-  const [showExpenseForm, setShowExpenseForm] = useState(false);
-  const [allExpenses, setAllExpenses] = useState([]);
-
-  // 🔹 Initialize Datepicker
-  useEffect(() => {
-    flatpickr("#datePicker", {
-      dateFormat: "Y-m-d",
-      defaultDate: new Date(),
-      onChange: (selectedDates, dateStr) => {
-        setSelectedDate(dateStr);
-      },
-    });
-  }, []);
-
-  // 🔹 Fetch categories from backend
-  useEffect(() => {
-    fetch("http://localhost:4000/api/finance/categories")
-      .then((res) => res.json())
-      .then((data) => setExpenseCategories(data))
-      .catch((err) => console.error("Error loading categories:", err));
-  }, []);
-
-  // 🔹 Fetch all expenses from backend
-  const fetchExpenses = () => {
-    fetch("http://localhost:4000/api/finance/expenses")
-      .then((res) => res.json())
-      .then((data) => setAllExpenses(data))
-      .catch((err) => console.error("Error loading expenses:", err));
+  const contentStyle = {
+    background: isDark
+      ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
+      : "#ffffff",
+    color: isDark ? "#ffffff" : "#000000",
+    minHeight: "100vh",
+    padding: "20px",
+    transition: "all 0.5s ease",
   };
 
+  const tableStyle = {
+    backgroundColor: isDark ? "rgba(255, 255, 255, 0.05)" : "#ffffff",
+    color: isDark ? "#ffffff" : "#000000",
+    border: isDark ? "2px solid #FFFF00" : "1px solid #dee2e6",
+    transition: "all 0.5s ease",
+    padding: "10px",
+    borderRadius: "5px",
+
+  };
+
+  // ✅ Match exactly with API keys
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
+
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [expenseData, setExpenseData] = useState({});
+  const [allExpenses, setAllExpenses] = useState([]); // ✅ API data stored here
+  const datePickerRef = useRef(null);
+
+  // ✅ Fetch data from API
   useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/finance/expense-report?year=2025&limit=100&offset=0");
+        const json = await res.json();
+        console.log("API Response:", json);
+        if (json.success && json.data) {
+          setAllExpenses(json.data);
+        }
+      } catch (err) {
+        console.error("Error fetching finance data:", err);
+      }
+    };
     fetchExpenses();
   }, []);
 
-  // 🔹 Handle input change
-  const handleChange = (categoryId, value) => {
-    setExpenseData((prev) => ({
-      ...prev,
-      [categoryId]: value,
-    }));
+  // Setup flatpickr date picker
+  useEffect(() => {
+    if (datePickerRef.current) {
+      flatpickr(datePickerRef.current, {
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        maxDate: "today",
+        onChange: (selectedDates, dateStr) => {
+          setSelectedDate(dateStr);
+          setShowExpenseForm(true);
+        },
+      });
+    }
+  }, []);
+
+  const handleExpenseChange = (e, category) => {
+    const value = e.target.value;
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setExpenseData((prev) => ({ ...prev, [category]: value }));
+    }
   };
 
-  // 🔹 Submit expenses
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    if (!selectedDate) return;
 
-    if (!selectedDate) {
-      alert("Please select a date.");
-      return;
-    }
-
-    for (const [catId, value] of Object.entries(expenseData)) {
-      if (value && parseFloat(value) > 0) {
-        try {
-          await fetch("http://localhost:4000/api/finance/addExpense", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: 1, // 🔹 Replace with logged-in user ID later
-              exp_catg_id: catId,
-              amount: parseFloat(value),
-              expense_date: selectedDate,
-              notes: null,
-            }),
-          });
-        } catch (err) {
-          console.error("Error saving expense:", err);
-        }
-      }
-    }
-
-    // Reset state
+    // You can later extend this to save to backend
     setExpenseData({});
     setShowExpenseForm(false);
     document.getElementById("expenseModalClose").click();
-    fetchExpenses();
   };
 
-  return (
-    <div className={`dashboard ${isDark ? "dark-mode" : ""}`}>
-      <TopNav />
-      <div className="dashboard-container">
-        <SideNav />
-        <div className="dashboard-content">
-          <h2>Finance Tracker</h2>
+  // ✅ Compute totals
+  const getCategoryTotal = (row) => {
+    return months.reduce((sum, m) => sum + parseFloat(row[m] || 0), 0);
+  };
 
-          {/* 🔹 Date Picker */}
-          <div className="mb-3">
-            <input
-              type="text"
-              id="datePicker"
-              className="form-control"
-              placeholder="Select Date"
-            />
+  const getGrandTotal = () => {
+    return allExpenses.reduce(
+      (sum, row) => sum + getCategoryTotal(row),
+      0
+    );
+  };
+
+  // ✅ DataTable columns
+  const columns = [
+    { name: "Category", selector: (row) => row.Category, sortable: true },
+    ...months.map((m) => ({
+      name: m,
+      selector: (row) => parseFloat(row[m] || 0),
+      sortable: true,
+      right: true,
+    })),
+    {
+      name: "Total",
+      selector: (row) => getCategoryTotal(row),
+      sortable: true,
+      right: true,
+    },
+  ];
+
+  // ✅ Data for DataTable
+  const data = allExpenses.map((row) => {
+    const rowData = { ...row };
+    months.forEach((m) => {
+      rowData[m] = parseFloat(row[m] || 0);
+    });
+    rowData.total = getCategoryTotal(row);
+    return rowData;
+  });
+
+  return (
+    <div className="dashboard-container">
+      <TopNav />
+      <div className="dashboard-wrapper">
+        <SideNav />
+        <main className="dashboard-content" style={contentStyle}>
+          <div className="card mb-4">
+            <div className="card-header">
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#expenseModal"
+              >
+                Add Expenses
+              </button>
+              <h2 className="card-title mt-2">Finance Data</h2>
+            </div>
+
+            {/* DataTable */}
+            <div className="card-body table-responsive bg-dark" style={tableStyle}>
+              <DataTable 
+                columns={columns}
+                data={data}
+                highlightOnHover
+                responsive
+                fixedHeader
+                pagination
+                theme={isDark ? "darkTable" : "default"}
+              />
+              <div className="mt-2 fw-bold text-end">
+                Grand Total: {getGrandTotal()}
+              </div>
+            </div>
           </div>
 
-          {/* 🔹 Open Expense Form */}
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowExpenseForm(true)}
+          {/* Modal */}
+          <div
+            className="modal fade"
+            id="expenseModal"
+            tabIndex="-1"
+            aria-hidden="true"
           >
-            Add Expenses
-          </button>
+            <div className="modal-dialog modal-xl modal-dialog-centered">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Daily Expenses</h5>
+                  <button
+                    id="expenseModalClose"
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <form onSubmit={handleSubmit}>
+                    <fieldset className="border rounded p-3 mb-3">
+                      <legend className="w-auto text-primary">Select Date</legend>
+                      <input
+                        ref={datePickerRef}
+                        placeholder="YYYY-MM-DD"
+                        className="form-control w-25"
+                      />
+                    </fieldset>
 
-          {/* 🔹 Expense Form Modal */}
-          {showExpenseForm && (
-            <div className="modal fade show d-block" tabIndex="-1">
-              <div className="modal-dialog modal-lg">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5 className="modal-title">Add Expenses</h5>
-                    <button
-                      type="button"
-                      id="expenseModalClose"
-                      className="btn-close"
-                      onClick={() => setShowExpenseForm(false)}
-                    ></button>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={handleSubmit}>
-                      <div className="row">
-                        {expenseCategories.map((cat) => (
-                          <div className="col-md-6 mb-3" key={cat.exp_catg_id}>
-                            <label>{cat.exp_catg_name}</label>
-                            <input
-                              type="number"
-                              className="form-control"
-                              value={expenseData[cat.exp_catg_id] || ""}
-                              onChange={(e) =>
-                                handleChange(cat.exp_catg_id, e.target.value)
-                              }
-                            />
-                          </div>
-                        ))}
-                      </div>
-                      <button type="submit" className="btn btn-success mt-3">
-                        Save Expenses
+                    {showExpenseForm && (
+                      <fieldset className="border rounded p-3 mb-3">
+                        <legend className="w-auto text-success">Enter Expenses</legend>
+                        <div className="row">
+                          {allExpenses.map((row, idx) => (
+                            <div key={idx} className="col-md-4 mb-3">
+                              <label className="form-label">{row.Category}</label>
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Amount (Rs.)"
+                                value={expenseData[row.Category] || ""}
+                                onChange={(e) =>
+                                  handleExpenseChange(e, row.Category)
+                                }
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </fieldset>
+                    )}
+
+                    <div className="d-flex justify-content-end">
+                      <button type="submit" className="btn btn-primary m-1">
+                        Save
                       </button>
-                    </form>
-                  </div>
+                      <button
+                        type="button"
+                        className="btn btn-secondary m-1"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
-          )}
-
-          {/* 🔹 Display Expenses */}
-          <div className="mt-5">
-            <h4>All Expenses</h4>
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Category</th>
-                  <th>Amount</th>
-                  <th>Notes</th>
-                  <th>User</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allExpenses.length > 0 ? (
-                  allExpenses.map((exp) => (
-                    <tr key={exp.expense_id}>
-                      <td>{exp.expense_date}</td>
-                      <td>{exp.exp_catg_name}</td>
-                      <td>{exp.amount}</td>
-                      <td>{exp.notes || "-"}</td>
-                      <td>{exp.username}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="5" className="text-center">
-                      No expenses recorded
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
           </div>
-        </div>
+        </main>
       </div>
     </div>
   );
