@@ -7,21 +7,12 @@ import DataTable, { createTheme } from "react-data-table-component";
 import "flatpickr/dist/flatpickr.min.css";
 import "../css/dashboard.css";
 
+// 🔹 Custom theme
 createTheme("darkTable", {
-  text: {
-    primary: "#ffffff",
-    secondary: "#cbd5e1",
-  },
-  background: {
-    default: "#0f172a",
-  },
-  context: {
-    background: "#1e293b",
-    text: "#ffffff",
-  },
-  divider: {
-    default: "#334155",
-  },
+  text: { primary: "#ffffff", secondary: "#cbd5e1" },
+  background: { default: "#0f172a" },
+  context: { background: "#1e293b", text: "#ffffff" },
+  divider: { default: "#334155" },
   action: {
     button: "rgba(255, 255, 255, 0.54)",
     hover: "rgba(255, 255, 255, 0.08)",
@@ -32,6 +23,15 @@ createTheme("darkTable", {
 const Finance = () => {
   const { isDark } = useContext(ThemeContext);
 
+  // 🔹 States
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [expenseData, setExpenseData] = useState({});
+  const [allExpenses, setAllExpenses] = useState([]);
+  const [extraExpenses, setExtraExpenses] = useState([]);
+  const datePickerRef = useRef(null);
+
+  // 🔹 Styles
   const contentStyle = {
     background: isDark
       ? "radial-gradient(circle at 30% 30%, rgba(99,102,241,0.25), transparent 40%), radial-gradient(circle at 70% 70%, rgba(59,130,246,0.25), transparent 40%), #0f172a"
@@ -51,34 +51,27 @@ const Finance = () => {
     borderRadius: "5px",
   };
 
-  const months = [
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  ];
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-  const [selectedDate, setSelectedDate] = useState("");
-  const [showExpenseForm, setShowExpenseForm] = useState(false);
-  const [expenseData, setExpenseData] = useState({});
-  const [allExpenses, setAllExpenses] = useState([]);
-  const [extraExpenses, setExtraExpenses] = useState([]); // for Add More fields
-  const datePickerRef = useRef(null);
+  // ========== FUNCTIONS ==========
 
-  useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/finance/expense-report?year=2025&limit=100&offset=0");
-        const json = await res.json();
-        if (json.success && json.data) {
-          setAllExpenses(json.data);
-        }
-      } catch (err) {
-        console.error("Error fetching finance data:", err);
+  // 🔹 Fetch expenses from backend
+  const fetchExpenses = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/finance/expense-report?year=2025&limit=100&offset=0"
+      );
+      const json = await res.json();
+      if (json.success && json.data) {
+        setAllExpenses(json.data);
       }
-    };
-    fetchExpenses();
-  }, []);
+    } catch (err) {
+      console.error("Error fetching finance data:", err);
+    }
+  };
 
-  useEffect(() => {
+  // 🔹 Setup Date Picker
+  const setupDatePicker = () => {
     if (datePickerRef.current) {
       flatpickr(datePickerRef.current, {
         enableTime: false,
@@ -91,8 +84,9 @@ const Finance = () => {
         },
       });
     }
-  }, []);
+  };
 
+  // 🔹 Handle Expense Change
   const handleExpenseChange = (e, category) => {
     const value = e.target.value;
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
@@ -100,6 +94,7 @@ const Finance = () => {
     }
   };
 
+  // 🔹 Handle Extra Expense Change
   const handleExtraExpenseChange = (index, field, value) => {
     setExtraExpenses((prev) => {
       const updated = [...prev];
@@ -108,16 +103,40 @@ const Finance = () => {
     });
   };
 
+  // 🔹 Add More Expense Field
   const addMoreExpenseField = () => {
     setExtraExpenses((prev) => [...prev, { Category: "", Amount: "" }]);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // 🔹 Handle Form Submit
+  const handleFormsubmit = async () => {
     if (!selectedDate) return;
 
-    console.log("Main Expenses:", expenseData);
-    console.log("Extra Expenses:", extraExpenses);
+    const payload = {
+      user_id: 1, // 🔹 Get this dynamically if you have auth
+      expense_date: selectedDate,
+      notes: "Daily expenses entry",
+      expenses: [
+        ...Object.entries(expenseData).map(([Category, Amount]) => ({
+          Category,
+          Amount,
+        })),
+        ...extraExpenses.filter((e) => e.Category.trim() !== ""),
+      ],
+    };
+
+    try {
+      await fetch("http://localhost:5000/api/finance/add-expense", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      alert("Expenses saved successfully!");
+    } catch (err) {
+      console.error("Error saving expenses:", err);
+      alert("Error saving expenses. Check console.");
+    }
 
     // Reset
     setExpenseData({});
@@ -126,6 +145,32 @@ const Finance = () => {
     document.getElementById("expenseModalClose").click();
   };
 
+  // 🔹 Handle Category Submit
+  const handleSubmit = async () => {
+    if (!selectedDate) return;
+    try {
+      for (const extra of extraExpenses) {
+        if (extra.Category.trim() !== "") {
+          await fetch("http://localhost:5000/api/finance/add-category", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ exp_catg_name: extra.Category }),
+          });
+        }
+      }
+      alert("Expenses & categories saved successfully!");
+    } catch (err) {
+      console.error("Error saving expenses:", err);
+      alert("Error saving expenses. Check console.");
+    }
+
+    setExpenseData({});
+    setExtraExpenses([]);
+    setShowExpenseForm(false);
+    document.getElementById("expenseModalClose").click();
+  };
+
+  // 🔹 Helpers
   const getCategoryTotal = (row) => {
     return months.reduce((sum, m) => sum + parseFloat(row[m] || 0), 0);
   };
@@ -134,6 +179,18 @@ const Finance = () => {
     return allExpenses.reduce((sum, row) => sum + getCategoryTotal(row), 0);
   };
 
+  const getFormTotal = () => {
+    let total = 0;
+    for (const key in expenseData) {
+      total += parseFloat(expenseData[key] || 0);
+    }
+    for (const extra of extraExpenses) {
+      total += parseFloat(extra.Amount || 0);
+    }
+    return total;
+  };
+
+  // 🔹 DataTable Config
   const columns = [
     { name: "Category", selector: (row) => row.Category, sortable: true },
     ...months.map((m) => ({
@@ -152,19 +209,25 @@ const Finance = () => {
 
   const data = allExpenses.map((row) => {
     const rowData = { ...row };
-    months.forEach((m) => {
-      rowData[m] = parseFloat(row[m] || 0);
-    });
+    months.forEach((m) => (rowData[m] = parseFloat(row[m] || 0)));
     rowData.total = getCategoryTotal(row);
     return rowData;
   });
 
+  // ========== LIFECYCLE ==========
+  useEffect(() => {
+    fetchExpenses();
+    setupDatePicker();
+  }, []);
+
+  // ========== JSX ==========
   return (
     <div className="dashboard-container">
       <TopNav />
       <div className="dashboard-wrapper">
         <SideNav />
         <main className="dashboard-content" style={contentStyle}>
+          {/* Table */}
           <div className="card mb-4">
             <div className="card-header">
               <button
@@ -179,7 +242,7 @@ const Finance = () => {
             </div>
 
             <div className="card-body table-responsive bg-dark" style={tableStyle}>
-              <DataTable 
+              <DataTable
                 columns={columns}
                 data={data}
                 highlightOnHover
@@ -195,12 +258,7 @@ const Finance = () => {
           </div>
 
           {/* Modal */}
-          <div
-            className="modal fade"
-            id="expenseModal"
-            tabIndex="-1"
-            aria-hidden="true"
-          >
+          <div className="modal fade" id="expenseModal" tabIndex="-1" aria-hidden="true">
             <div className="modal-dialog modal-xl modal-dialog-centered">
               <div className="modal-content">
                 <div className="modal-header">
@@ -213,7 +271,14 @@ const Finance = () => {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <form onSubmit={handleSubmit}>
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSubmit();
+                      handleFormsubmit();
+                    }}
+                  >
+                    {/* Date */}
                     <fieldset className="border rounded p-3 mb-3">
                       <legend className="w-auto text-primary">Select Date</legend>
                       <input
@@ -225,27 +290,28 @@ const Finance = () => {
 
                     {showExpenseForm && (
                       <>
+                        {/* Main Expenses */}
                         <fieldset className="border rounded p-3 mb-3">
                           <legend className="w-auto text-success">Enter Expenses</legend>
                           <div className="row">
-                            {allExpenses.map((row, idx) => (
-                              <div key={idx} className="col-md-4 mb-3">
-                                <label className="form-label">{row.Category}</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  placeholder="Amount (Rs.)"
-                                  value={expenseData[row.Category] || ""}
-                                  onChange={(e) =>
-                                    handleExpenseChange(e, row.Category)
-                                  }
-                                />
-                              </div>
-                            ))}
+                            {allExpenses
+                              .filter((row) => row.Category !== "TOTAL")
+                              .map((row, idx) => (
+                                <div key={idx} className="col-md-4 mb-3">
+                                  <label className="form-label">{row.Category}</label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Amount (Rs.)"
+                                    value={expenseData[row.Category] || ""}
+                                    onChange={(e) => handleExpenseChange(e, row.Category)}
+                                  />
+                                </div>
+                              ))}
                           </div>
                         </fieldset>
 
-                        {/* Extra Fields */}
+                        {/* Additional Expenses */}
                         <fieldset className="border rounded p-3 mb-3">
                           <legend className="w-auto text-info">Additional Expenses</legend>
                           {extraExpenses.map((extra, idx) => (
@@ -282,6 +348,11 @@ const Finance = () => {
                             + Add More
                           </button>
                         </fieldset>
+
+                        {/* ✅ Show Total */}
+                        <div className="d-flex justify-content-end mt-3 fw-bold">
+                          Total: {getFormTotal()} Rs.
+                        </div>
                       </>
                     )}
 
