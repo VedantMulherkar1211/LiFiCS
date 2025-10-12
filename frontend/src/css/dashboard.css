@@ -1,4 +1,6 @@
-/* Layout base */
+/* =========================
+   Layout base
+========================= */
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -17,9 +19,12 @@
   overflow-y: auto; /* Scrollable content area */
   padding: 20px;
   background-color: #f8f9fa; /* Light background */
+  transition: all 0.5s ease;
 }
 
-/* Sidebar */
+/* =========================
+   Sidebar (reserved for SideNav)
+========================= */
 
 
 /* Ensure main content is scrollable if charts overflow */
@@ -37,6 +42,66 @@
 }
 
 /* Adjust column height if needed */
-.columnbox, .radialbox {
+.columnbox,
+.radialbox {
   min-height: 350px;
+}
+
+/* =========================
+   🔹 Chart Grid Layout (New)
+========================= */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(5, minmax(200px, 1fr));
+  gap: 20px;
+  width: 100%;
+  height: calc(100vh - 120px); /* Adjust based on TopNav height */
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* Chart container cell */
+.chart-cell {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect for interactivity */
+.chart-cell:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Dark theme mode */
+.dashboard-content.dark .chart-cell {
+  background-color: #1e293b;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Light theme mode */
+.dashboard-content.light .chart-cell {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Responsive behavior for smaller screens */
+@media (max-width: 992px) {
+  .chart-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
 }
