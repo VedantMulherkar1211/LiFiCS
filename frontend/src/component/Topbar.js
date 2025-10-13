@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import "../css/topbar.css";
 import { Navbar } from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
-import { User } from 'react-feather';
+import { User,Sun,Moon } from 'react-feather';
 import { ThemeContext } from "../component/ThemeContext";
 
 const Topbar = () => {
@@ -28,7 +28,7 @@ const Topbar = () => {
     <Navbar className="topbar glass-navbar" expand="lg" style={topbarStyle}>
       <div className="topbar-content container-fluid">
         <div className="topbar-left">
-          <span className="lifics-title">LIFICS</span>
+          <span className="lifics-title"></span>
         </div>
       </div>
 
@@ -43,20 +43,32 @@ const Topbar = () => {
         <svg className={`arrow-down-icon ${isUserMenuOpen ? 'open' : ''}`} viewBox="0 0 24 24">
           <polyline points="6 9 12 15 18 9" />
         </svg>
-
+        <div className="theme-toggle-btn">
+          <button
+            id="theme-toggle"
+            className="btn btn-theme"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleTheme();
+            }}
+          >
+            {isDark ? (
+              <>
+                <Sun size={16} style={{ marginRight: '6px' }} />
+                Light Mode
+              </>
+            ) : (
+              <>
+                <Moon size={16} style={{ marginRight: '6px' }} />
+                Dark Mode
+              </>
+            )}
+          </button>
+        </div>
         {isUserMenuOpen && (
           <div className="user-menu" >
-            <div className="menu-item bg-dark" style={topbarStyle}>View profile</div>
+            <div className="menu-item bg-dark" style={topbarStyle}>Profile</div>
             <div className="menu-item bg-dark">Account settings</div>
-            <div className="menu-item bg-dark ">
-              <button 
-                id="theme-toggle" 
-                className="btn btn-primary"
-                onClick={(e) => { e.stopPropagation(); toggleTheme(); }}
-              >
-                Switch to {isDark ? "Light" : "Dark"} Mode
-              </button>
-            </div>
             <div className="menu-item logout bg-dark " onClick={handleLogout}><b>Log out</b></div>
           </div>
         )}

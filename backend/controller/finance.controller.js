@@ -1,56 +1,107 @@
-const { pool } = require('../services/db.service');
+// backend/controller/expense.controller.js
+import db from "../services/db.js";
 
-module.exports = (app) => {
-  // Get all categories
-  app.get('/api/finance/categories', (req, res) => {
-    pool.query("SELECT exp_catg_id, exp_catg_name FROM tblexp_Category", (err, result) => {
-      if (err) {
-        console.error("Error fetching categories:", err);
-        return res.status(500).json({ error: "Failed to fetch categories" });
-      }
-      res.json(result);
+export const get_tblfinexpense = async (req, res) => {
+  try {
+    const { year, limit, offset } = req.query;
+
+    const p_year = year || new Date().getFullYear();
+    const p_limit = parseInt(limit) || 100;
+    const p_offset = parseInt(offset) || 0;
+
+    const [rows] = await db.query(
+      "CALL Usp_GetFinanceReport(?, ?, ?)",
+      [p_year, p_limit, p_offset]
+    );
+
+    const result = rows[0];
+
+    res.json({
+      success: true,
+      year: p_year,
+      data: result
     });
-  });
+  } catch (err) {
+    console.error("Error fetching finance report:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
 
-  // Add an expense
-  app.post('/api/finance/addExpense', (req, res) => {
-    const { user_id, exp_catg_id, amount, expense_date, notes } = req.body;
 
-    if (!user_id || !exp_catg_id || !amount || !expense_date) {
-      return res.status(400).json({ error: "Missing required fields" });
+//Add new category
+
+export const post_addCategory = async (req, res) => {
+  let { exp_catg_name } = req.body;
+
+  if (!exp_catg_name) {
+    return res.status(400).json({ success: false, message: "Category name required" });
+  }
+
+  // Allow both single string and array
+  if (!Array.isArray(exp_catg_name)) {
+    exp_catg_name = [exp_catg_name];
+  }
+
+  try {
+    for (const cat of exp_catg_name) {
+      if (cat && cat.trim() !== "") {
+        await db.query(
+          "INSERT IGNORE INTO tblexp_Category (exp_catg_name) VALUES (?)",
+          [cat.trim()]
+        );
+      }
+    }
+    res.json({ success: true, message: "Category(ies) added successfully" });
+  } catch (err) {
+    console.error("Error adding category:", err);
+    res.status(500).json({ success: false, message: "Error adding category" });
+  }
+};
+
+
+export const addExpense = async (req, res) => {
+  const { user_id, expenses, expense_date, notes } = req.body;
+
+  if (!user_id || !expense_date || !expenses || expenses.length === 0) {
+    return res.status(400).json({ success: false, message: "Invalid input data" });
+  }
+
+  try {
+    for (const exp of expenses) {
+      if (!exp.Category || !exp.Amount) continue;
+
+      await db.query("CALL AddExpense(?, ?, ?, ?, ?)", [
+        user_id,
+        exp.Category,
+        exp.Amount,
+        expense_date,
+        notes || null,
+      ]);
     }
 
-    const sql = `
-      INSERT INTO tblfin_Expenses (user_id, exp_catg_id, amount, expense_date, notes)
-      VALUES (?, ?, ?, ?, ?)
-    `;
+    res.json({ success: true, message: "Expenses saved successfully!" });
+  } catch (err) {
+    console.error("Error saving expenses:", err);
+    res.status(500).json({ success: false, message: "Database error" });
+  }
+};
 
-    pool.query(sql, [user_id, exp_catg_id, amount, expense_date, notes || null], (err, result) => {
-      if (err) {
-        console.error("Error inserting expense:", err);
-        return res.status(500).json({ error: "Failed to save expense" });
-      }
-      res.json({ message: "Expense added successfully", expense_id: result.insertId });
-    });
-  });
 
-  // Get all expenses
-  app.get('/api/finance/expenses', (req, res) => {
-    const sql = `
-      SELECT e.expense_id, e.amount, e.expense_date, e.notes,
-             c.exp_catg_name, u.username
-      FROM tblfin_Expenses e
-      JOIN tblexp_Category c ON e.exp_catg_id = c.exp_catg_id
-      JOIN mst_tblusers u ON e.user_id = u.user_id
-      ORDER BY e.expense_date DESC
-    `;
+// backend/controller/expense.controller.js
+export const getExpensesByDate = async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [rows] = await db.query(
+      `SELECT e.expense_id, c.exp_catg_name AS Category, e.amount 
+       FROM tblfin_Expenses e
+       JOIN tblexp_Category c ON e.exp_catg_id = c.exp_catg_id
+       WHERE e.expense_date = ?`,
+      [date]
+    );
 
-    pool.query(sql, (err, result) => {
-      if (err) {
-        console.error("Error fetching expenses:", err);
-        return res.status(500).json({ error: "Failed to fetch expenses" });
-      }
-      res.json(result);
-    });
-  });
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error("Error fetching expenses by date:", err);
+    res.status(500).json({ success: false, message: "Error fetching expenses" });
+  }
 };

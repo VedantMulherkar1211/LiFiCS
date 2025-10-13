@@ -6,7 +6,7 @@ import { ThemeProvider } from "./component/ThemeContext";
 //pages
 import Login from "../src/component/Login";
 import Dashboard from "../src/pages/Dashboard";
-import Finance from "../src/pages/finance"; 
+import Finance from "./pages/finance.expense"; 
 import Health from "../src/pages/health";
 import Carear from "../src/pages/Carear";
 import Lifestyle from "../src/pages/Lifestyle";
@@ -23,7 +23,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/fit" element={<FitDashboard />} />
-        <Route path="/finance" element={<Finance />} />
+        <Route path="/finance/expense" element={<Finance />} />
         <Route path="/health" element={<Health />} />
         <Route path="/carear" element={<Carear />} />
         <Route path="/learning" element={<Learning />} />

@@ -150,3 +150,42 @@
   background-color: #fed7d7; /* Red-100 */
   color: #c53030; /* Red-700 */
 }
+
+
+
+/* Theme toggle button */
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: auto;
+}
+
+.btn-theme {
+  background: transparent;
+  color: inherit;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-theme:hover {
+  background-color: rgba(255, 255, 0, 0.15);
+  transform: scale(1.05);
+}
+
+/* Dark mode special border glow */
+body.dark .btn-theme {
+  border-color: #ffff00;
+  color: #ffff00;
+}
+
+body.light .btn-theme {
+  border-color: #000000;
+  color: #000000;
+}

@@ -20,7 +20,7 @@ createTheme("darkTable", {
   },
 });
 
-const Finance = () => {
+const FinanceExpense = () => {
   const { isDark } = useContext(ThemeContext);
 
   // 🔹 States
@@ -71,20 +71,36 @@ const Finance = () => {
   };
 
   // 🔹 Setup Date Picker
+  // const setupDatePicker = () => {
+  //   if (datePickerRef.current) {
+  //     flatpickr(datePickerRef.current, {
+  //       enableTime: false,
+  //       dateFormat: "Y-m-d",
+  //       allowInput: true,
+  //       maxDate: "today",
+  //       onChange: (selectedDates, dateStr) => {
+  //         setSelectedDate(dateStr);
+  //         setShowExpenseForm(true);
+  //       },
+  //     });
+  //   }
+  // };
   const setupDatePicker = () => {
-    if (datePickerRef.current) {
-      flatpickr(datePickerRef.current, {
-        enableTime: false,
-        dateFormat: "Y-m-d",
-        allowInput: true,
-        maxDate: "today",
-        onChange: (selectedDates, dateStr) => {
-          setSelectedDate(dateStr);
-          setShowExpenseForm(true);
-        },
-      });
-    }
-  };
+  if (datePickerRef.current) {
+    flatpickr(datePickerRef.current, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      allowInput: true,
+      maxDate: "today",
+      onChange: (selectedDates, dateStr) => {
+        setSelectedDate(dateStr);
+        setShowExpenseForm(true);
+        fetchExpensesByDate(dateStr); // 🔹 load existing values
+      },
+    });
+  }
+};
+
 
   // 🔹 Handle Expense Change
   const handleExpenseChange = (e, category) => {
@@ -190,6 +206,27 @@ const Finance = () => {
     return total;
   };
 
+  //added
+  const fetchExpensesByDate = async (dateStr) => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/finance/expenses-by-date?date=${dateStr}`
+    );
+    const json = await res.json();
+    if (json.success && json.data) {
+      // Pre-fill form with existing amounts
+      const existing = {};
+      json.data.forEach((item) => {
+        existing[item.Category] = item.amount;
+      });
+      setExpenseData(existing);
+    }
+  } catch (err) {
+    console.error("Error fetching expenses by date:", err);
+  }
+};
+
+
   // 🔹 DataTable Config
   const columns = [
     { name: "Category", selector: (row) => row.Category, sortable: true },
@@ -219,6 +256,8 @@ const Finance = () => {
     fetchExpenses();
     setupDatePicker();
   }, []);
+
+  
 
   // ========== JSX ==========
   return (
@@ -379,4 +418,4 @@ const Finance = () => {
   );
 };
 
-export default Finance;
+export default FinanceExpense;
