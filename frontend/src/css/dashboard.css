@@ -3,11 +3,13 @@
   flex-direction: column;
   min-height: 100vh;
   overflow: hidden;
+  background-color: #f9fafb;
 }
 
 .dashboard-wrapper {
   display: flex;
   flex: 1;
+  margin-top: 60px; /* Account for fixed topbar */
 }
 
 .dashboard-content {
@@ -16,6 +18,13 @@
   overflow-y: auto;
   height: calc(100vh - var(--top-nav-height));
   box-sizing: border-box;
+  margin-left: 260px; /* Account for fixed sidebar */
+  background-color: #f9fafb;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+.dashboard-content.sidebar-collapsed {
+  margin-left: 70px;
 }
 
 .card-row {
@@ -28,7 +37,8 @@
 .card {
   background-color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
   padding: 20px;
   box-sizing: border-box;
 }
@@ -54,6 +64,7 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin: 0;
+  color: #1f2937;
 }
 
 .card-actions {
@@ -67,21 +78,23 @@
 
 /* Styles for TopNav and SideNav */
 .top-nav {
-  background-color: #333;
-  color: white;
+  background-color: #ffffff;
+  color: #1f2937;
   padding: 10px;
   text-align: center;
   height: var(--top-nav-height);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .side-nav {
-  background-color: #222;
-  color: white;
+  background-color: #ffffff;
+  color: #1f2937;
   width: 250px;
   padding: 20px;
   height: 100%;
+  border-right: 1px solid #e5e7eb;
 }
 
 :root {
-  --top-nav-height: 40px; /* Changed from 60px to 40px */
+  --top-nav-height: 60px; /* Changed from 40px to match topbar height */
 }

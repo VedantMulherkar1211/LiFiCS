@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function GoogleFitDashboard() {
+function FitData() {
   const [accessToken, setAccessToken] = useState('');
   const [steps, setSteps] = useState(null);
   const [heartRate, setHeartRate] = useState(null);
@@ -85,4 +85,4 @@ function GoogleFitDashboard() {
   );
 }
 
-export default GoogleFitDashboard;
+export default FitData;

@@ -1,55 +1,66 @@
-// Import React and necessary hooks
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+ 
+function Login() {
+  const [email, setEmail] =useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-function LoginPage(props) {
-    // State variables for username, password, and error message
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
 
-    // Initialize useNavigate hook for navigation
-    const navigate = useNavigate();
-
-    // Function to handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Navigate to main page
-        navigate('/main');
-    };
-
-    // JSX structure for login form
-    return (
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="mx-auto p-6 bg-white rounded-md shadow-md">
-                <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="username" className="block mb-2">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block mb-2">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-                        />
-                    </div>
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Login</button>
-                    {errorMessage && <p className="text-red-500 text-sm whitespace-pre-line text-center mt-4 ">{errorMessage}</p>} {/* Display error message if exists */}
-                </form>
-            </div>
-        </div>
-    );
+  async function handleSubmit(event){
+    event.preventDefault();
+ 
+    try {
+      const res = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password
+      });
+ 
+      if (res.data.success) {
+        navigate('/'); // redirects to Dashboard route
+        // Optional: Redirect to dashboard
+      } else {
+        setError(res.data.message);
+      }
+    } catch (error) {
+      console.error("Login error", error);
+       setError('Something went wrong. Please try again.');
+    }
+  }
+ 
+  return (
+    <div className='d-flex vh-100 justify-content-center align-items-center bg-primary'>
+      <div className='p-3 bg-white w-25 rounded'>
+        <h4 className='mb-3 text-center'>Login</h4>
+        <form onSubmit={handleSubmit}>
+          <div className='mb-3'>
+            <label>Email</label>
+            <input
+              type="email"
+              className='form-control'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className='mb-3'>
+            <label>Password</label>
+            <input
+              type="password"
+              className='form-control'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button className='btn btn-success w-100'>Login</button>
+        </form>
+      </div>
+    </div>
+  );
 }
-
-export default LoginPage;
+ 
+export default Login;

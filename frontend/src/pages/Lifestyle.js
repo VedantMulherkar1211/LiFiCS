@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare, faBullseye, faDownload, faExpand } from '@fortawesome/free-solid-svg-icons';
-import TopNav from '../component/Topbar';
-import SideNav from '../component/Sidebar';
+import Topbar from '../component/Topbar';
+import Sidebar from '../component/Sidebar';
+import { SidebarContext } from '../context/SidebarContext';
 import '../css/dashboard.css';
 
 
 const Lifestyle = () => {
+  const { isSidebarCollapsed } = useContext(SidebarContext);
   return (
     <div className="dashboard-container">
-      <TopNav />
+      <Topbar />
       <div className="dashboard-wrapper">
-        <SideNav />
-        <main className="dashboard-content">
+        <Sidebar />
+        <main className={`dashboard-content ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
           <div className="card-row">
             <div className="full-width-card card">
               <div className="card-header">

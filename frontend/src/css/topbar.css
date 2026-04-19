@@ -1,12 +1,13 @@
 .topbar {
   height: 60px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between; /* Changed to space-between */
   align-items: center; /* Added to vertically center content */
   padding: 0 20px;
-  background-color: #18181b;
-  color: #fff; /* Added to set default text color */
+  background-color: #ffffff;
+  color: #000000; /* Changed to black */
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .topbar-content {
@@ -30,7 +31,7 @@
 .lifics-title {
   font-size: 20px;
   font-weight: 600;
-  color: #fff; /* Changed to #fff */
+  color: #000000; /* Changed to black */
 }
 
 .topbar-right {
@@ -76,6 +77,80 @@
   width: 20px;
   height: 20px;
   color: #4a5568; /* (e.g., Gray-700) */
+}
+
+/* Glass Dock Navigation */
+.glass-dock {
+  background-color: #f9fafb;
+  backdrop-filter: blur(15px);
+  border: 1px solid #e5e7eb;
+  max-width: 95vw;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.glass-dock::-webkit-scrollbar {
+  display: none;
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: #f9fafb;
+  backdrop-filter: blur(15px);
+  border: 1px solid #e5e7eb;
+  color: #000000;
+  min-width: fit-content;
+  position: fixed;
+  top: 12px;
+  right: 20px;
+  z-index: 1031;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.profile-card:hover {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #000000;
+}
+
+.profile-info {
+  font-size: 0.85rem;
+}
+
+.profile-info-name {
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: rgba(15, 14, 14, 0.507);
+}
+
+.profile-info-email {
+  font-size: 0.75rem;
+  color: rgba(15, 14, 14, 0.507);
+}
+
+/* Transition Animation */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-all:hover:not(.bg-primary) {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #0d6efd;
+  transform: translateY(-2px);
 }
 
 .user-info {

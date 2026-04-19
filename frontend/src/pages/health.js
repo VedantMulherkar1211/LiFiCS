@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-import TopNav from "../component/Topbar";
-import SideNav from "../component/Sidebar";
+import Topbar from "../component/Topbar";
+import Sidebar from "../component/Sidebar";
+import { SidebarContext } from "../context/SidebarContext";
 
 const Health = () => {
+  const { isSidebarCollapsed } = useContext(SidebarContext);
   const [formData, setFormData] = useState({
     age: "",
     gender: "",
@@ -48,10 +50,10 @@ const Health = () => {
 
   return (
     <div className="dashboard-container">
-      <TopNav />
+      <Topbar />
       <div className="dashboard-wrapper">
-        <SideNav />
-        <main className="dashboard-content">
+        <Sidebar />
+        <main className={`dashboard-content ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
           {/* Data Table Card */}
           <div className="card mb-4">
             <div className="card-header">

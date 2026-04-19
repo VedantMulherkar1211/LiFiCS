@@ -2,12 +2,16 @@
   background-color: #18181b; /* Dark background */
   color: #e2e8f0; /* Light text */
   width: 260px;
-  height: 100vh;
+  height: 100vh; /* Full viewport height */
+  position: fixed;
+  top: 0; /* Start from top */
+  left: 0;
   display: flex;
   flex-direction: column;
   padding: 20px;
   box-sizing: border-box;
   transition: width 0.3s ease-in-out;
+  z-index: 900; /* Below topbar z-index of 1030 */
 }
 
 .sidebar.collapsed {
@@ -39,7 +43,7 @@
 .collapse-toggle {
   background: none;
   border: none;
-  color: #a0aec0;
+  color: #6b7280;
   cursor: pointer;
   padding: 5px;
 }
@@ -53,27 +57,28 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background-color: #2d3748;
+  background-color: #f3f4f6;
   border-radius: 8px;
   padding: 8px;
   margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
 }
 
 .search-icon {
   margin-right: 8px;
-  color: #a0aec0;
+  color: #6b7280;
 }
 
 .search-bar input {
   background: none;
   border: none;
-  color: #e2e8f0;
+  color: #1f2937;
   flex-grow: 1;
   font-size: 1rem;
 }
 
 .search-bar input::placeholder {
-  color: #a0aec0;
+  color: #9ca3af;
 }
 
 /* Navigation list */
@@ -90,15 +95,15 @@
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 5px;
-  color: #a0aec0;
+  color: #6b7280;
   transition: background-color 0.2s ease-in-out;
   position: relative;
 }
 
 .nav-item.active,
 .nav-item:hover {
-  background-color: #2d3748;
-  color: #fff;
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 .nav-icon {
@@ -119,8 +124,8 @@
 
 /* Badge */
 .badge {
-  background-color: #4a5568;
-  color: #e2e8f0;
+  background-color: #e5e7eb;
+  color: #1f2937;
   border-radius: 6px;
   padding: 2px 6px;
   font-size: 0.8rem;
@@ -150,15 +155,15 @@
 
 .sub-item {
   padding: 8px 0;
-  color: #a0aec0;
+  color: #6b7280;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.2s ease-in-out;
 }
 
 .sub-item:hover {
-  background-color: #2d3748;
-  color: #fff;
+  background-color: #f3f4f6;
+  color: #111827;
 }
 
 /* User Profile */
@@ -169,24 +174,26 @@
   align-items: center;
   border-radius: 8px;
   cursor: pointer;
-  background-color: #2d3748;
+  background-color: #f3f4f6;
   position: relative;
+  border: 1px solid #e5e7eb;
 }
 
 .user-profile:hover {
-  background-color: #4a5568;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .avatar {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #a0aec0;
+  background-color: #e5e7eb;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 10px;
-  color: #1a202c;
+  color: #1f2937;
   font-weight: bold;
   font-size: 0.9rem;
   overflow: hidden;
@@ -203,11 +210,12 @@
   font-weight: bold;
   font-size: 0.9rem;
   display: block;
+  color: #1f2937;
 }
 
 .user-email {
   font-size: 0.8rem;
-  color: #a0aec0;
+  color: #6b7280;
   display: block;
 }
 

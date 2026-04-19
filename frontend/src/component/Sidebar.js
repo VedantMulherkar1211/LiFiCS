@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import '../css/sidebar.css'; // Custom CSS
-import Search from "../component/search";
+import SearchBar from "./SearchBar";
 import { useNavigate } from 'react-router-dom';
+import { SidebarContext } from '../context/SidebarContext';
 import {
   FaMoneyBillWave,
   FaBook,
@@ -18,14 +19,13 @@ import {
 } from 'react-feather';
 
 function Sidebar() {
+  const { isSidebarCollapsed, toggleSidebarCollapse } = useContext(SidebarContext);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const navigate = useNavigate(); // React Router navigation
 
   const toggleAnalytics = () => setIsAnalyticsOpen(!isAnalyticsOpen);
   const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
-  const toggleSidebarCollapse = () => setIsSidebarCollapsed(!isSidebarCollapsed);
 
   const handleDashboardClick = () => {
     navigate('/');
@@ -36,7 +36,7 @@ function Sidebar() {
   const handleFinanceClick = () => {
     navigate('/finance');
   };
-  const handleCarearClick = () => {
+  const handleCareerClick = () => {
     navigate('/carear');
   };
   const handleLifestyleClick = () => {
@@ -84,9 +84,9 @@ function Sidebar() {
           </li>
 
           <li className="nav-item">
-          <button className="nav-button" onClick={ handleCarearClick}>
+          <button className="nav-button" onClick={ handleCareerClick}>
             <FaBook className="nav-icon" size={16} />
-            <span className="nav-label">Carear</span>
+            <span className="nav-label">Career</span>
             <span className="badge">8</span>
             </button>
           </li>
@@ -119,7 +119,7 @@ function Sidebar() {
             <ul className="sub-menu">
               <li className="nav-item sub-item"><span className="nav-label">Health</span></li>
               <li className="nav-item sub-item"><span className="nav-label">Finance</span></li>
-              <li className="nav-item sub-item"><span className="nav-label">Carear</span></li>
+              <li className="nav-item sub-item"><span className="nav-label">Career</span></li>
               <li className="nav-item sub-item"><span className="nav-label">Lifestyle</span></li>
               <li className="nav-item sub-item"><span className="nav-label">Learning</span></li>
             </ul>
@@ -146,8 +146,7 @@ function Sidebar() {
           )}
 
           <div className="search-bar">
-            <Search className="search-icon" size={8} />
-            <input type="text" placeholder="Search..." />
+            <SearchBar />
           </div>
         </ul>
       </nav>

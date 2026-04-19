@@ -1,31 +1,34 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { SidebarProvider } from "./context/SidebarContext";
 //components
 
 //pages
-import Login from "../src/component/Login";
-import Dashboard from "../src/pages/Dashboard";
-import Finance from "../src/pages/finance"; 
-import Health from "../src/pages/health";
-import Carear from "../src/pages/Carear";
-import Lifestyle from "../src/pages/Lifestyle";
-import Learning from "../src/pages/Learning";
-import FitDashboard from "../src/component/fitdata"; // ✅ Capitalized component name
+import Login from "./component/Login";
+import Dashboard from "./pages/Dashboard";
+import Finance from "./pages/finance"; 
+import Health from "./pages/health";
+import Career from "./pages/Career";
+import Lifestyle from "./pages/Lifestyle";
+import Learning from "./pages/Learning";
+import FitData from "./component/FitData"; // Capitalized component name
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/fit" element={<FitDashboard />} />
-        <Route path="/finance" element={<Finance />} />
-        <Route path="/health" element={<Health />} />
-        <Route path="/carear" element={<Carear />} />
-        <Route path="/learning" element={<Learning />} />
-        <Route path="/lifestyle" element={<Lifestyle />} />
-      </Routes>
-    </Router>
+    <SidebarProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/fit" element={<FitData />} />
+          <Route path="/finance" element={<Finance />} />
+          <Route path="/health" element={<Health />} />
+          <Route path="/carear" element={<Career />} />
+          <Route path="/learning" element={<Learning />} />
+          <Route path="/lifestyle" element={<Lifestyle />} />
+        </Routes>
+      </Router>
+    </SidebarProvider>
   );
 };
 
